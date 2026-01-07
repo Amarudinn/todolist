@@ -1,0 +1,152 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #0a0a0f;
+  min-height: 100vh;
+  padding: 40px 20px;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(99, 102, 241, 0.03) 0%, transparent 50%),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+  background-attachment: fixed;
+}
+
+body::before {
+  display: none;
+}
+
+#root {
+  background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  max-width: 480px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.tab svg {
+  width: 18px;
+  height: 18px;
+}
+
+.tab:hover {
+  color: #9ca3af;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.tab.active {
+  color: #a78bfa;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg, #8b5cf6, #6366f1);
+  border-radius: 2px;
+}
+
+
+.footer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 16px 20px 24px;
+}
+
+.footer a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: #6b7280;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.footer a:hover {
+  color: #a78bfa;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.footer svg {
+  width: 20px;
+  height: 20px;
+}
+
+
+.login-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0a0a0f;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(99, 102, 241, 0.03) 0%, transparent 50%),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+  z-index: 1000;
+}
+
+
+@media (max-width: 520px) {
+  body {
+    padding: 0;
+  }
+
+  #root {
+    border-radius: 0;
+    min-height: 100vh;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .tabs {
+    gap: 0;
+  }
+
+  .tab {
+    padding: 14px 10px;
+    font-size: 0.85rem;
+  }
+}
