@@ -92,32 +92,6 @@ Buka http://localhost:5173
    - `VITE_APP_PASSWORD`
 4. Deploy
 
-## Cara Penggunaan
-
-### Login
-Masukkan password yang sudah diset di environment variable untuk mengakses aplikasi.
-
-### Tambah Todo
-Ketik tugas di kolom input lalu klik tombol + untuk menambahkan.
-
-### Selesaikan Todo
-Klik checkbox di sebelah kiri todo untuk menandai selesai.
-
-### Hapus Todo
-Klik icon tempat sampah untuk menghapus todo.
-
-### Pilih/Batalkan Semua
-Gunakan tombol untuk memilih atau membatalkan semua todo sekaligus.
-
-### Complete
-Klik tombol Complete untuk mengunci hari ini. Setelah diklik, tidak bisa menambah atau mengubah todo lagi.
-
-### History
-Lihat riwayat todo di tab History. Klik tanggal untuk melihat detail.
-
-### Reset Harian
-Todo otomatis reset setiap ganti hari. Todo kemarin tersimpan di History.
-
 ## License
 
 MIT
