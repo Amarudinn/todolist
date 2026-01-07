@@ -18,12 +18,6 @@ Aplikasi Todo List modern dengan fitur PWA (Progressive Web App), dark theme, da
 - ✅ PWA (bisa di-install)
 - ✅ Data tersimpan di cloud (Supabase)
 
-## Screenshots
-
-| Login | Todo List | History |
-|-------|-----------|---------|
-| ![Login](screenshots/login.png) | ![Todo](screenshots/todo.png) | ![History](screenshots/history.png) |
-
 ## Tech Stack
 
 - React 19
@@ -123,45 +117,6 @@ Lihat riwayat todo di tab History. Klik tanggal untuk melihat detail.
 
 ### Reset Harian
 Todo otomatis reset setiap ganti hari. Todo kemarin tersimpan di History.
-
-## Struktur Project
-
-```
-todo-pwa/
-├── public/
-│   ├── pwa-192x192.png
-│   └── pwa-512x512.png
-├── src/
-│   ├── components/
-│   │   ├── History/
-│   │   ├── Login/
-│   │   └── TodoList/
-│   ├── lib/
-│   │   └── supabase.js
-│   ├── App.jsx
-│   ├── App.css
-│   └── main.jsx
-├── .env.example
-├── index.html
-├── package.json
-├── supabase-schema.sql
-└── vite.config.js
-```
-
-## Screenshots yang Perlu Diambil
-
-Simpan di folder `screenshots/`:
-
-| No | Nama File | Apa yang di-screenshot |
-|----|-----------|------------------------|
-| 1 | `preview.png` | Tampilan utama todo list dengan 3-4 todo (ada yang sudah di-check) |
-| 2 | `login.png` | Halaman login (sebelum masukkan password) |
-| 3 | `todo.png` | Tab Todo dengan beberapa item, tampilkan stats Pending/Selesai |
-| 4 | `history.png` | Tab History dengan salah satu tanggal di-expand (dropdown terbuka) |
-
-**Tips:**
-- Gunakan ukuran layar mobile (inspect > toggle device toolbar) untuk hasil lebih bagus
-- Pastikan ada data todo saat screenshot
 
 ## License
 
