@@ -31,8 +31,8 @@ Aplikasi Todo List modern dengan fitur PWA (Progressive Web App), dark theme, da
 ### 1. Clone repository
 
 ```bash
-git clone https://github.com/amarudinn/todo-pwa.git
-cd todo-pwa
+git clone https://github.com/amarudinn/todolist.git
+cd todolist
 ```
 
 ### 2. Install dependencies
