@@ -9,9 +9,9 @@ Aplikasi Todo List modern dengan fitur PWA (Progressive Web App), dark theme, da
 - ✅ Tambah, edit, dan hapus todo
 - ✅ Checklist todo selesai/belum
 - ✅ Pilih semua / batalkan semua
-- ✅ Complete day (kunci hari ini)
-- ✅ Reset otomatis setiap ganti hari
-- ✅ History todo per tanggal
+- ✅ Complete Day - selesaikan hari ini dan mulai task besok tanpa tunggu pergantian hari
+- ✅ Reset otomatis setiap ganti hari (00:00 WIB)
+- ✅ History todo per tanggal (timezone WIB)
 - ✅ Password protection
 - ✅ Dark theme modern
 - ✅ Responsive (mobile friendly)
@@ -44,25 +44,9 @@ npm install
 ### 3. Setup Supabase
 
 1. Buat project di [supabase.com](https://supabase.com)
-2. Buka SQL Editor dan jalankan query berikut:
-
-```sql
-CREATE TABLE todos (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  text TEXT NOT NULL,
-  completed BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
-ALTER TABLE todos ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Allow all operations" ON todos
-  FOR ALL
-  USING (true)
-  WITH CHECK (true);
-```
-
-3. Copy URL dan anon key dari Settings > API
+2. Buka SQL Editor dan jalankan query dari file `supabase-schema.sql`
+3. **PENTING:** Jika table `todos` sudah ada sebelumnya, jalankan juga migration dari file `supabase-migration-add-date.sql` untuk menambah kolom `date`
+4. Copy URL dan anon key dari Settings > API
 
 ### 4. Setup Environment Variables
 

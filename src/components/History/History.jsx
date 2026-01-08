@@ -26,13 +26,14 @@ export default function History() {
       const { data, error } = await supabase
         .from('todos')
         .select('*')
+        .order('date', { ascending: false })
         .order('created_at', { ascending: false })
 
       if (error) throw error
 
-      // Group by date
+      // Group by date column
       const grouped = (data || []).reduce((acc, todo) => {
-        const date = new Date(todo.created_at).toLocaleDateString('en-CA')
+        const date = todo.date
         if (!acc[date]) acc[date] = []
         acc[date].push(todo)
         return acc

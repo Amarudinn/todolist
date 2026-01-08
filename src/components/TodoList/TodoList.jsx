@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
+import { getTodayWIB, getCurrentWorkingDate, advanceWorkingDate } from '../../lib/dateUtils'
 import styles from './TodoList.module.css'
 
 function useCurrentDate() {
@@ -42,12 +43,20 @@ export default function TodoList() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [showTutorial, setShowTutorial] = useState(false)
-  const [dayCompleted, setDayCompleted] = useState(false)
+  const [workingDate, setWorkingDate] = useState(getCurrentWorkingDate())
   const [alertModal, setAlertModal] = useState({ show: false, title: '', message: '', type: 'info', onConfirm: null })
 
   useEffect(() => {
+    // Check if real date has changed (midnight passed)
+    const today = getTodayWIB()
+    const currentWorking = getCurrentWorkingDate()
+    
+    // If working date is in the past, reset to today
+    if (currentWorking < today) {
+      setWorkingDate(today)
+    }
+    
     fetchTodos()
-    checkDayCompleted()
   }, [currentDate])
 
   function showAlert(title, message, type = 'info', onConfirm = null) {
@@ -58,45 +67,15 @@ export default function TodoList() {
     setAlertModal({ show: false, title: '', message: '', type: 'info', onConfirm: null })
   }
 
-  function checkDayCompleted() {
-    const today = new Date().toLocaleDateString('en-CA')
-    const completed = localStorage.getItem(`dayCompleted_${today}`)
-    if (completed === 'true') {
-      setDayCompleted(true)
-    }
-  }
-
-  function completeDay() {
-    if (dayCompleted) return
-    
-    showAlert(
-      'Selesaikan Hari Ini?',
-      'Kamu tidak bisa menambah atau mengubah todo lagi setelah ini.',
-      'confirm',
-      () => {
-        const today = new Date().toLocaleDateString('en-CA')
-        localStorage.setItem(`dayCompleted_${today}`, 'true')
-        setDayCompleted(true)
-        closeAlert()
-        setTimeout(() => {
-          showAlert('Selesai!', 'Tugas hari ini sudah diselesaikan! Sampai jumpa besok 👋', 'success')
-        }, 100)
-      }
-    )
-  }
-
   async function fetchTodos() {
     try {
       setLoading(true)
-      const today = new Date().toLocaleDateString('en-CA')
-      const startOfDay = `${today}T00:00:00`
-      const endOfDay = `${today}T23:59:59`
+      const currentWorking = getCurrentWorkingDate()
       
       const { data, error } = await supabase
         .from('todos')
         .select('*')
-        .gte('created_at', startOfDay)
-        .lte('created_at', endOfDay)
+        .eq('date', currentWorking)
         .order('created_at', { ascending: false })
 
       if (error) throw error
@@ -111,15 +90,12 @@ export default function TodoList() {
   async function addTodo(e) {
     e.preventDefault()
     if (!newTodo.trim()) return
-    if (dayCompleted) {
-      showAlert('Tidak Bisa', 'Tugas hari ini sudah diselesaikan. Tidak bisa menambah todo baru.', 'warning')
-      return
-    }
 
     try {
+      const currentWorking = getCurrentWorkingDate()
       const { data, error } = await supabase
         .from('todos')
-        .insert([{ text: newTodo.trim(), completed: false }])
+        .insert([{ text: newTodo.trim(), completed: false, date: currentWorking }])
         .select()
 
       if (error) throw error
@@ -131,10 +107,6 @@ export default function TodoList() {
   }
 
   async function toggleTodo(id, completed) {
-    if (dayCompleted) {
-      showAlert('Tidak Bisa', 'Tugas hari ini sudah diselesaikan. Tidak bisa mengubah todo.', 'warning')
-      return
-    }
     try {
       const { error } = await supabase
         .from('todos')
@@ -151,10 +123,6 @@ export default function TodoList() {
   }
 
   async function deleteTodo(id) {
-    if (dayCompleted) {
-      showAlert('Tidak Bisa', 'Tugas hari ini sudah diselesaikan. Tidak bisa menghapus todo.', 'warning')
-      return
-    }
     try {
       const { error } = await supabase
         .from('todos')
@@ -169,10 +137,6 @@ export default function TodoList() {
   }
 
   async function toggleAll() {
-    if (dayCompleted) {
-      showAlert('Tidak Bisa', 'Tugas hari ini sudah diselesaikan. Tidak bisa mengubah todo.', 'warning')
-      return
-    }
     const newCompleted = !allCompleted
     try {
       const ids = todos.map(t => t.id)
@@ -189,10 +153,6 @@ export default function TodoList() {
   }
 
   async function deleteCompletedTodos() {
-    if (dayCompleted) {
-      showAlert('Tidak Bisa', 'Tugas hari ini sudah diselesaikan. Tidak bisa menghapus todo.', 'warning')
-      return
-    }
     if (completedCount === 0) return
     showAlert(
       'Hapus Todo Selesai?',
@@ -212,6 +172,23 @@ export default function TodoList() {
         } catch (err) {
           setError(err.message)
         }
+      }
+    )
+  }
+
+  function completeDay() {
+    showAlert(
+      'Selesaikan Hari Ini?',
+      'Semua task akan dipindah ke history dan kamu bisa mulai task untuk hari berikutnya.',
+      'confirm',
+      () => {
+        const nextDate = advanceWorkingDate()
+        setWorkingDate(nextDate)
+        setTodos([])
+        closeAlert()
+        setTimeout(() => {
+          showAlert('Selesai!', 'Task hari ini sudah dipindah ke history. Sekarang kamu bisa tambah task untuk besok! 🎉', 'success')
+        }, 100)
       }
     )
   }
@@ -303,8 +280,8 @@ export default function TodoList() {
                   </svg>
                 </span>
                 <div>
-                  <strong>Complete</strong>
-                  <p>Klik tombol Complete untuk mengunci dan menyelesaikan tugas hari ini. Setelah diklik, kamu tidak bisa menambah atau mengubah todo lagi.</p>
+                  <strong>Complete Day</strong>
+                  <p>Klik tombol Complete Day untuk menyelesaikan task hari ini. Semua task akan dipindah ke history dan kamu bisa langsung mulai task untuk hari berikutnya tanpa tunggu pergantian hari.</p>
                 </div>
               </div>
               <div className={styles.tutorialItem}>
@@ -331,7 +308,7 @@ export default function TodoList() {
                 </span>
                 <div>
                   <strong>Reset Harian</strong>
-                  <p>Todo otomatis reset setiap ganti hari. Todo kemarin akan tersimpan di History dan halaman utama akan kosong untuk hari baru.</p>
+                  <p>Jika tidak klik Complete Day, todo otomatis masuk history saat pergantian hari (00:00 WIB). Halaman utama akan kosong untuk hari baru.</p>
                 </div>
               </div>
               <div className={styles.tutorialItem}>
@@ -477,14 +454,14 @@ export default function TodoList() {
               )}
             </button>
             <button 
-              className={`${styles.actionButton} ${dayCompleted ? styles.completedButton : ''}`}
+              className={styles.actionButton}
               onClick={completeDay}
-              disabled={dayCompleted}
+              disabled={todos.length === 0}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
-              {dayCompleted ? 'Completed' : 'Complete'}
+              Complete Day
             </button>
           </div>
           
