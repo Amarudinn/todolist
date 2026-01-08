@@ -288,7 +288,7 @@
 }
 
 .completed {
-  color: #6b7280;
+  /* Tidak ada perubahan visual pada text saat di-check */
 }
 
 .deleteButton {
