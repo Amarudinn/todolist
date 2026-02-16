@@ -11,29 +11,6 @@ export function getTodayWIB() {
 }
 
 /**
- * Convert UTC date to WIB date string (YYYY-MM-DD format)
- */
-export function convertUTCtoWIBDate(utcDate) {
-  const date = new Date(utcDate)
-  const wibOffset = 7 * 60
-  const wibTime = new Date(date.getTime() + (wibOffset * 60 * 1000))
-  return wibTime.toISOString().split('T')[0]
-}
-
-/**
- * Get start and end of day in WIB as ISO strings for Supabase query
- */
-export function getWIBDayRange(dateString) {
-  const startOfDayWIB = new Date(`${dateString}T00:00:00+07:00`)
-  const endOfDayWIB = new Date(`${dateString}T23:59:59+07:00`)
-  
-  return {
-    start: startOfDayWIB.toISOString(),
-    end: endOfDayWIB.toISOString()
-  }
-}
-
-/**
  * Get current working date (bisa berbeda dari tanggal real jika user sudah complete hari ini)
  */
 export function getCurrentWorkingDate() {
@@ -69,4 +46,3 @@ export function resetWorkingDate() {
   localStorage.setItem('currentWorkingDate', today)
   return today
 }
-
